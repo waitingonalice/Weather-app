@@ -17,6 +17,7 @@ export const useFetchData = <T>() => {
       return data;
     } catch (err) {
       if (err instanceof Error) setError(err.message);
+      setError("Something went wrong");
     }
   };
 

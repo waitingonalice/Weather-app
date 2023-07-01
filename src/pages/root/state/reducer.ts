@@ -1,12 +1,14 @@
 import { useReducer } from "react";
-import { InitialStateType, LocationType, initialState } from "./state";
+import { InitialStateType, initialState } from "./state";
+import { useLocalStorage } from "@/utils";
 
 enum ActionType {
   SET_INPUT = "SET_INPUT",
-  SET_RESPONSE = "SET_RESPONSE",
+  SET_CURRENT_WEATHER = "SET_CURRENT_WEATHER",
   ADD_RECORD = "ADD_RECORD",
   DELETE_RECORD = "DELETE_RECORD",
   SET_RECORDS = "SET_RECORDS",
+  CLEAR_INPUT = "CLEAR_INPUT",
 }
 
 interface InputType {
@@ -17,6 +19,7 @@ interface InputType {
 interface useActionType {
   type: ActionType;
   payload?: unknown;
+  setLocalStorageRecords?: (arg: string) => void;
 }
 
 type SingleRecordType = InitialStateType["records"][number];
@@ -25,7 +28,7 @@ const reducer = (
   state: InitialStateType,
   action: useActionType
 ): InitialStateType => {
-  const { payload } = action;
+  const { payload, setLocalStorageRecords } = action;
   switch (action.type) {
     case ActionType.SET_INPUT: {
       const { key, value } = payload as InputType;
@@ -38,14 +41,32 @@ const reducer = (
       const response = payload as SingleRecordType;
       const updateRecords = [...state.records];
       updateRecords.unshift(response);
+      const maintainNumberOfRecords = updateRecords.slice(0, 20);
+
+      if (setLocalStorageRecords)
+        setLocalStorageRecords(JSON.stringify(maintainNumberOfRecords));
+      return { ...state, records: maintainNumberOfRecords };
+    }
+
+    case ActionType.DELETE_RECORD: {
+      const response = payload as SingleRecordType["timestamp"];
+      const updateRecords = [...state.records];
+      const index = updateRecords.findIndex(
+        (record) => record.timestamp === response
+      );
+      if (index !== -1) updateRecords.splice(index, 1);
+      if (setLocalStorageRecords)
+        setLocalStorageRecords(JSON.stringify(updateRecords));
+
       return { ...state, records: updateRecords };
     }
 
     case ActionType.SET_RECORDS: {
-      return { ...state };
+      const records = payload as InitialStateType["records"];
+      return { ...state, records };
     }
 
-    case ActionType.SET_RESPONSE: {
+    case ActionType.SET_CURRENT_WEATHER: {
       const response = payload as NonNullable<InitialStateType["data"]>;
       return {
         ...state,
@@ -58,6 +79,9 @@ const reducer = (
       };
     }
 
+    case ActionType.CLEAR_INPUT:
+      return { ...state, fields: { city: "", country: "" } };
+
     default:
       return state;
   }
@@ -65,7 +89,8 @@ const reducer = (
 
 export const useWeatherAppReducer = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
-
+  const [, setLocalStorageRecords] = useLocalStorage("records");
+  console.log(state.records);
   return {
     setInput: (payload: InputType) =>
       dispatch({ type: ActionType.SET_INPUT, payload }),
@@ -74,19 +99,31 @@ export const useWeatherAppReducer = () => {
       dispatch({ type: ActionType.SET_RECORDS, payload }),
 
     addRecord: (payload: SingleRecordType) =>
-      dispatch({ type: ActionType.ADD_RECORD, payload }),
+      dispatch({
+        type: ActionType.ADD_RECORD,
+        payload,
+        setLocalStorageRecords,
+      }),
+
+    deleteRecord: (payload: SingleRecordType["timestamp"]) =>
+      dispatch({
+        type: ActionType.DELETE_RECORD,
+        payload,
+        setLocalStorageRecords,
+      }),
 
     setCurrentWeather: (payload: InitialStateType["data"]) =>
-      dispatch({ type: ActionType.SET_RESPONSE, payload }),
+      dispatch({ type: ActionType.SET_CURRENT_WEATHER, payload }),
+
+    clearInput: () =>
+      dispatch({
+        type: ActionType.CLEAR_INPUT,
+      }),
 
     input: state.fields,
 
     data: state.data,
-    /** Removes duplicate entries and keeps the first 50 entries */
-    records: [
-      ...new Map(
-        state.records.map((item) => [item.state && item.code, item])
-      ).values(),
-    ].slice(0, 50),
+
+    records: state.records,
   };
 };

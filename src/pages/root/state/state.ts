@@ -23,10 +23,8 @@ export interface InitialStateType {
   } | null;
   // This is used for storing of records and will be used as a cache layer
   records: {
-    city: string;
-    country: string;
     code: string;
-    state: string;
+    state?: string;
     timestamp: number;
     location: LocationType;
   }[];

@@ -52,6 +52,7 @@ export const Input = ({
         </Text>
       </div>
       <input
+        type="text"
         ref={inputRef}
         value={value}
         onChange={handleOnChange}

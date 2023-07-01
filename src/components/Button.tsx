@@ -20,11 +20,11 @@ const buttonStyleMapping: MappingType = {
   primarySearch:
     "bg-primary rounded-[20px] w-[60px] h-[60px] enabled:active:bg-violet-900",
   secondarySearch:
-    "bg-white rounded-[50%] h-[32px] w-[40px] enabled:active:bg-gray-500 drop-shadow-md",
+    "bg-white rounded-[50%] h-[32px] w-[32px] enabled:active:bg-gray-300 drop-shadow-md",
   primaryDelete:
     "bg-primary rounded-[20px] w-[60px] h-[60px] enabled:active:bg-violet-900",
   secondaryDelete:
-    "bg-white rounded-[50%] h-[32px] w-[40px] enabled:active:bg-gray-500 drop-shadow-md",
+    "bg-white rounded-[50%] h-[32px] w-[32px] enabled:active:bg-gray-300 drop-shadow-md",
 };
 const buttonIconMapping: MappingType = {
   primarySearch: (
@@ -47,7 +47,7 @@ export const Button = ({ onClick, type, disabled, className }: ButtonProps) => {
       disabled={disabled}
       aria-disabled={disabled}
       className={clsx(
-        "flex items-center justify-center transition-all duration-100 ease-in-out",
+        "flex items-center justify-center transition-all duration-100 ease-in-out disabled:cursor-not-allowed disabled:opacity-30",
         buttonStyleMapping[type],
         className
       )}
