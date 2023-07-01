@@ -1,9 +1,9 @@
-import { useState } from "react";
+import Root from "./pages/root";
 
-const App = () => {
-  const [state, setState] = useState();
-
-  return <></>;
-};
+const App = () => (
+  <div className="bg-[url('assets/bg-light.png')] h-screen flex justify-center p-4">
+    <Root />
+  </div>
+);
 
 export default App;
