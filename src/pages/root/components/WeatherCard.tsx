@@ -15,7 +15,7 @@ export const WeatherCard = ({
 }: WeatherCardProps) => {
   const { data } = weatherReducer;
   return (
-    <div className="border-white-50 border rounded-[24px] w-full bg-white-20 p-8 relative mt-32">
+    <section className="border-white-50 border rounded-[24px] w-full bg-white-20 p-8 relative mt-32">
       <img
         src={data?.weather === "Clear" ? "assets/sun.png" : "assets/cloud.png"}
         className="absolute sm:-top-24 -top-16 sm:max-w-[300px] max-w-[157px] sm:right-0 right-5"
@@ -34,7 +34,7 @@ export const WeatherCard = ({
           <Text type="subhead" className="sm:mb-0 -mb-7">
             H: {data?.highTemp ?? "-"}° L: {data?.lowTemp ?? "-"}°
           </Text>
-          <div className="flex justify-between mt-2 flex-col-reverse sm:flex-row">
+          <div className="flex justify-between mt-2 flex-col-reverse gap-y-1 sm:flex-row">
             <div className="grid grid-cols-2">
               <Text type="subheadBold" className="text-slate">
                 {data?.city && data?.code ? `${data.city}, ${data.code}` : "-"}
@@ -58,6 +58,6 @@ export const WeatherCard = ({
         </div>
       )}
       {children}
-    </div>
+    </section>
   );
 };

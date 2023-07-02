@@ -1,10 +1,15 @@
 import { useWeatherAppReducer } from "../state/reducer";
 import { Text, Button } from "@/components";
 import { InitialStateType } from "../state/state";
+import { toDDMMYYYYTime } from "@/utils";
+import { CurrentWeatherDataType } from "../loader/currentWeather";
 
 interface HistoryRecordCardProps {
   weatherReducer: ReturnType<typeof useWeatherAppReducer>;
-  loadCurrentWeather: (lat: number, long: number) => Promise<void>;
+  loadCurrentWeather: (
+    lat: number,
+    long: number
+  ) => Promise<CurrentWeatherDataType>;
   loading: boolean;
 }
 
@@ -23,16 +28,14 @@ const SingleRecord = ({
 }: SingleRecordProps) => {
   return (
     <div className="flex justify-between bg-white-40 p-4 h-fit items-center rounded-[16px]">
-      <div className="flex max-w-[50%]">
-        {record.city && (
-          <Text type="body" className="line-clamp-1">
-            {record.city},
-          </Text>
-        )}
-        &nbsp;
-        <Text type="body">{record.code}</Text>
+      <div className="flex justify-between flex-wrap w-full gap-y-1">
+        <div className="flex">
+          {record.city && <Text type="body">{record.city},&nbsp;</Text>}
+          <Text type="body">{record.code}</Text>
+        </div>
+        <Text type="body">{toDDMMYYYYTime(record.timestamp)}</Text>
       </div>
-      <div className="flex gap-x-4">
+      <div className="flex gap-x-4 ml-4">
         <Button
           disabled={loading}
           type="secondarySearch"
@@ -63,7 +66,7 @@ export const HistoryRecordCard = ({
     loadCurrentWeather(lat, long);
 
   return (
-    <div className="border-0 rounded-[24px] bg-white-20 p-6 mt-6  ">
+    <div className="border-0 rounded-[24px] bg-white-20 p-6 mt-6">
       <Text type="subhead" className="mb-6">
         Search History
       </Text>

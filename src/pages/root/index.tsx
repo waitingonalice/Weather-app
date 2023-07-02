@@ -36,6 +36,7 @@ const Root = () => {
       city: response.name,
       code: response.sys.country,
     });
+    return response;
   };
 
   useEffect(() => {
@@ -87,6 +88,10 @@ const Root = () => {
       if ("cod" in response || response.length < 1 || geoLocationOptions.error)
         throw new Error("No results found.");
 
+      const currentWeatherResponse = await loadCurrentWeather(
+        response[0].lat,
+        response[0].lon
+      );
       weatherReducer.addRecord({
         code: response[0].country,
         location: {
@@ -94,10 +99,8 @@ const Root = () => {
           longitude: response[0].lon,
         },
         city: response[0].name,
-        timestamp: new Date().getTime(),
+        timestamp: currentWeatherResponse.dt,
       });
-
-      await loadCurrentWeather(response[0].lat, response[0].lon);
       weatherReducer.clearInput();
       weatherReducer.setAlert({ show: false, title: "" });
     } catch (err) {
@@ -112,7 +115,7 @@ const Root = () => {
 
   return (
     <div className="flex flex-col items-center w-[700px]">
-      <div className="flex sm:flex-row flex-col sm:gap-x-4 gap-y-4 justify-between w-full">
+      <section className="flex sm:flex-row flex-col sm:gap-x-4 gap-y-4 justify-between w-full">
         <Input
           value={weatherReducer.input.city}
           label="City"
@@ -151,7 +154,7 @@ const Root = () => {
             }
           />
         </div>
-      </div>
+      </section>
       <Alert
         {...weatherReducer.alert}
         className="mt-4"

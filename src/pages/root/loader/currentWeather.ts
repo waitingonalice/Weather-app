@@ -1,7 +1,7 @@
 import { useFetchData } from "@/utils";
 import { apiRoute } from "@/constants/routes";
 
-interface CurrentWeatherDataType {
+export interface CurrentWeatherDataType {
   weather: {
     main: string;
   }[];
