@@ -4,7 +4,6 @@ import { useWeatherAppReducer } from "./state/reducer";
 import { WeatherCard } from "./components/WeatherCard";
 import { useLocalStorage } from "@/utils";
 import { useCurrentWeather } from "./loader/currentWeather";
-import { pollFreshData } from "./utils/regularPoll";
 import { HistoryRecordCard } from "./components/HistoryRecordCard";
 import { useGeoLocation } from "./loader/geocoding";
 
@@ -65,18 +64,6 @@ const Root = () => {
     };
     onAppMount();
   }, []);
-
-  useEffect(() => {
-    if (!weatherReducer.data) return;
-    // Poll for fresh data every 10 minutes for one hour if the location does not change within the timer. This checks for inactivity.
-    const { currentLocation } = weatherReducer.data;
-    pollFreshData(() =>
-      loadCurrentWeather(currentLocation.latitude, currentLocation.longitude)
-    );
-  }, [
-    weatherReducer.data?.currentLocation.latitude,
-    weatherReducer.data?.currentLocation.longitude,
-  ]);
 
   const handleOnSubmit = async () => {
     if (!weatherReducer.input.city && !weatherReducer.input.country) return;
