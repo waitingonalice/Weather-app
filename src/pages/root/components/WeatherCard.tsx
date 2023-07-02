@@ -15,7 +15,7 @@ export const WeatherCard = ({
 }: WeatherCardProps) => {
   const { data } = weatherReducer;
   return (
-    <section className="border-white-50 border rounded-[24px] w-full bg-white-20 p-8 relative mt-32">
+    <section className="border-white-50 border rounded-[24px] w-full bg-white-20 p-4 sm:p-8 relative mt-32">
       <img
         src={data?.weather === "Clear" ? "sun.png" : "cloud.png"}
         className="absolute sm:-top-24 -top-16 sm:max-w-[300px] max-w-[157px] sm:right-0 right-5"

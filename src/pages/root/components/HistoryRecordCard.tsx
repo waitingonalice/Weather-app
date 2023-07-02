@@ -66,7 +66,7 @@ export const HistoryRecordCard = ({
     loadCurrentWeather(lat, long);
 
   return (
-    <div className="border-0 rounded-[24px] bg-white-20 p-6 mt-6">
+    <div className="border-0 rounded-[24px] bg-white-20 p-4 sm:p-6 mt-6">
       <Text type="subhead" className="mb-6">
         Search History
       </Text>
