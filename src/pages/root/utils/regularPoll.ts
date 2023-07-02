@@ -9,6 +9,6 @@ export const pollFreshData = (callback: () => void) => {
     }
     callback();
     // make a request every 10 mins
-  }, 1000 * 60 * 10);
+  }, 1000 * 10 * 60);
   return () => clearInterval(interval);
 };

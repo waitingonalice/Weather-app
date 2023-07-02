@@ -73,7 +73,10 @@ const Root = () => {
     pollFreshData(() =>
       loadCurrentWeather(currentLocation.latitude, currentLocation.longitude)
     );
-  }, [weatherReducer.data?.currentLocation]);
+  }, [
+    weatherReducer.data?.currentLocation.latitude,
+    weatherReducer.data?.currentLocation.longitude,
+  ]);
 
   const handleOnSubmit = async () => {
     if (!weatherReducer.input.city && !weatherReducer.input.country) return;
