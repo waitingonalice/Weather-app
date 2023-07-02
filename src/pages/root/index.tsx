@@ -98,6 +98,7 @@ const Root = () => {
       });
 
       await loadCurrentWeather(response[0].lat, response[0].lon);
+      weatherReducer.clearInput();
       weatherReducer.setAlert({ show: false, title: "" });
     } catch (err) {
       process.env.NODE_ENV === "development" && console.error(err);
