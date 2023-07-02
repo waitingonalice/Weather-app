@@ -6,6 +6,6 @@ export const apiRoute = {
     `${base}data/2.5/weather?lat=${lat}&lon=${long}&units=metric&appid=${apiKey}`,
   geocoding: (city: string, country: string) =>
     `${base}geo/1.0/direct?q=${encodeURIComponent(
-      city || country
+      city.concat(",", country)
     )}&limit=1&appid=${apiKey}`,
 };

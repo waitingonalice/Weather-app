@@ -18,13 +18,13 @@ type MappingType = {
 
 const buttonStyleMapping: MappingType = {
   primarySearch:
-    "bg-primary rounded-[20px] w-[60px] h-[60px] enabled:active:bg-violet-900",
+    "bg-primary rounded-[20px] w-[60px] h-[60px] enabled:active:bg-violet-900 hover:bg-violet-600",
   secondarySearch:
-    "bg-white rounded-[50%] h-[32px] w-[32px] enabled:active:bg-gray-300 drop-shadow-md",
+    "bg-white rounded-[50%] h-[32px] w-[32px] enabled:active:bg-gray-300 drop-shadow-md hover:bg-gray-100",
   primaryDelete:
-    "bg-primary rounded-[20px] w-[60px] h-[60px] enabled:active:bg-violet-900",
+    "bg-primary rounded-[20px] w-[60px] h-[60px] enabled:active:bg-violet-900 hover:bg-violet-600",
   secondaryDelete:
-    "bg-white rounded-[50%] h-[32px] w-[32px] enabled:active:bg-gray-300 drop-shadow-md",
+    "bg-white rounded-[50%] h-[32px] w-[32px] enabled:active:bg-gray-300 drop-shadow-md hover:bg-gray-100",
 };
 const buttonIconMapping: MappingType = {
   primarySearch: (

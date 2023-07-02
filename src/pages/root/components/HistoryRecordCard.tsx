@@ -24,9 +24,9 @@ const SingleRecord = ({
   return (
     <div className="flex justify-between bg-white-40 p-4 h-fit items-center rounded-[16px]">
       <div className="flex max-w-[50%]">
-        {record.state && (
+        {record.city && (
           <Text type="body" className="line-clamp-1">
-            {record.state},
+            {record.city},
           </Text>
         )}
         &nbsp;

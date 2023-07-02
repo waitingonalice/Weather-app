@@ -9,6 +9,7 @@ enum ActionType {
   DELETE_RECORD = "DELETE_RECORD",
   SET_RECORDS = "SET_RECORDS",
   CLEAR_INPUT = "CLEAR_INPUT",
+  SET_ALERT = "SET_ALERT",
 }
 
 interface InputType {
@@ -79,6 +80,11 @@ const reducer = (
       };
     }
 
+    case ActionType.SET_ALERT: {
+      const alert = payload as InitialStateType["alert"];
+      return { ...state, alert };
+    }
+
     case ActionType.CLEAR_INPUT:
       return { ...state, fields: { city: "", country: "" } };
 
@@ -90,7 +96,7 @@ const reducer = (
 export const useWeatherAppReducer = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [, setLocalStorageRecords] = useLocalStorage("records");
-  console.log(state.records);
+
   return {
     setInput: (payload: InputType) =>
       dispatch({ type: ActionType.SET_INPUT, payload }),
@@ -120,10 +126,15 @@ export const useWeatherAppReducer = () => {
         type: ActionType.CLEAR_INPUT,
       }),
 
+    setAlert: (payload: InitialStateType["alert"]) =>
+      dispatch({ type: ActionType.SET_ALERT, payload }),
+
     input: state.fields,
 
     data: state.data,
 
     records: state.records,
+
+    alert: state.alert,
   };
 };

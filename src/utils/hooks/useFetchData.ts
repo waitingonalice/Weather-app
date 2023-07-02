@@ -16,8 +16,11 @@ export const useFetchData = <T>() => {
       setLoading(false);
       return data;
     } catch (err) {
-      if (err instanceof Error) setError(err.message);
-      setError("Something went wrong");
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Something went wrong");
+      }
     }
   };
 

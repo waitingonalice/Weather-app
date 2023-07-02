@@ -1,4 +1,4 @@
-import { Input, Button } from "@/components";
+import { Input, Button, Alert } from "@/components";
 import { useEffect } from "react";
 import { useWeatherAppReducer } from "./state/reducer";
 import { WeatherCard } from "./components/WeatherCard";
@@ -21,6 +21,7 @@ const Root = () => {
         longitude: long,
       },
     });
+    if (!response) throw new Error("No results found.");
     weatherReducer.setCurrentWeather({
       currentLocation: {
         latitude: lat,
@@ -74,34 +75,43 @@ const Root = () => {
   }, [weatherReducer.data?.currentLocation]);
 
   const handleOnSubmit = async () => {
-    const response = await getGeoLocation({
-      input: {
-        city: weatherReducer.input.city,
-        country: weatherReducer.input.country,
-      },
-    });
+    if (!weatherReducer.input.city && !weatherReducer.input.country) return;
+    try {
+      const response = await getGeoLocation({
+        input: {
+          city: weatherReducer.input.city,
+          country: weatherReducer.input.country,
+        },
+      });
 
-    if ("cod" in response || response.length < 1)
-      return console.log("show error banner");
+      if ("cod" in response || response.length < 1 || geoLocationOptions.error)
+        throw new Error("No results found.");
 
-    weatherReducer.addRecord({
-      code: response[0].country,
-      location: {
-        latitude: response[0].lat,
-        longitude: response[0].lon,
-      },
-      state: response[0].state,
-      timestamp: new Date().getTime(),
-    });
+      weatherReducer.addRecord({
+        code: response[0].country,
+        location: {
+          latitude: response[0].lat,
+          longitude: response[0].lon,
+        },
+        city: response[0].name,
+        timestamp: new Date().getTime(),
+      });
 
-    await loadCurrentWeather(response[0].lat, response[0].lon);
+      await loadCurrentWeather(response[0].lat, response[0].lon);
+      weatherReducer.setAlert({ show: false, title: "" });
+    } catch (err) {
+      process.env.NODE_ENV === "development" && console.error(err);
+      if (err instanceof Error) {
+        weatherReducer.setAlert({ show: true, title: err.message });
+      }
+    }
   };
 
   const handleOnDelete = () => weatherReducer.clearInput();
 
   return (
     <div className="flex flex-col items-center w-[700px]">
-      <div className="flex sm:flex-row flex-col sm:gap-x-4 gap-y-4 justify-between w-full mb-32">
+      <div className="flex sm:flex-row flex-col sm:gap-x-4 gap-y-4 justify-between w-full">
         <Input
           value={weatherReducer.input.city}
           label="City"
@@ -115,11 +125,11 @@ const Root = () => {
         />
         <Input
           value={weatherReducer.input.country}
-          label="Country"
+          label="Country Code"
           onChange={(e) =>
             weatherReducer.setInput({
               key: "country",
-              value: e.currentTarget.value,
+              value: e.currentTarget.value.toUpperCase(),
             })
           }
           className="sm:w-1/2 w-full"
@@ -141,7 +151,16 @@ const Root = () => {
           />
         </div>
       </div>
-
+      <Alert
+        {...weatherReducer.alert}
+        className="mt-4"
+        onClose={() =>
+          weatherReducer.setAlert({
+            show: false,
+            title: "",
+          })
+        }
+      />
       <WeatherCard
         weatherReducer={weatherReducer}
         error={currentWeatherOptions.error}

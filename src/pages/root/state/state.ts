@@ -9,7 +9,7 @@ export interface InitialStateType {
     city: string;
     country: string;
   };
-  // store response from current weather api to be displayed to client, this will be polled and updated
+  // store response from current weather api to be displayed to client
   data: {
     currentTimestamp: number;
     highTemp: number;
@@ -21,13 +21,17 @@ export interface InitialStateType {
     code: string;
     city: string;
   } | null;
-  // This is used for storing of records and will be used as a cache layer
+  // This is used for storing of records
   records: {
     code: string;
-    state?: string;
+    city?: string;
     timestamp: number;
     location: LocationType;
   }[];
+  alert: {
+    title: string;
+    show: boolean;
+  };
 }
 
 export const initialState: InitialStateType = {
@@ -37,4 +41,8 @@ export const initialState: InitialStateType = {
   },
   records: [],
   data: null,
+  alert: {
+    title: "",
+    show: false,
+  },
 };
